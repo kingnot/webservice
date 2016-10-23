@@ -1,0 +1,23 @@
+{
+  "name": "webservice",
+  "version": "1.0.0",
+  "description": "A RESTful Web App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingnot/webservice.git"
+  },
+  "author": "Fei Wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kingnot/webservice/issues"
+  },
+  "homepage": "https://github.com/kingnot/webservice#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
