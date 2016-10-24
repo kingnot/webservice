@@ -8,23 +8,19 @@
     <script>
     	$(document).ready(function() {
 			$('#submitbutton').click(function(){
-				var usernameString = "Username: " + $("input#username").val();
-				var firstnameString = "First Name: " + $("input#firstname").val();
-				var lastnameString = "Last Name: " + $("input#lastname").val();
-				var emailString = "Email: " + $("input#username").val();
-				var cityString = "City: " + $("input#city").val();
-				var inputString = usernameString + firstnameString + lastnameString + emailString + cityString;
+				var usernameString = $("input#username").val();
+				var nameString = $("input#firstname").val() + " " + $("input#lastname").val();
+				var emailString = $("input#email").val();
+				var cityString = $("input#city").val();
+				var inputString = usernameString + nameString + emailString + cityString;
 				//AJAX call to display input sting below form
 				$.ajax({
 					type: "GET",
 					url: "/",
 					data: inputString,
 					success: function() {
-						$('#message-username').html(usernameString);
-						$('#message-firstname').html(firstnameString);
-						$('#message-lastname').html(lastnameString);
-						$('#message-email').html(emailString);
-						$('#message-city').html(cityString);
+						$('#message-response').html("Thank you, " + nameString + ". Your account: " 
+							+ usernameString + " has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly.");
 					}
 				});
 			});
@@ -56,10 +52,7 @@
 		</div>
 		<input type="submit" id="submitbutton" value="Done">
 	</form>
-	<div id="message-username"></div>
-	<div id="message-firstname"></div>
-	<div id="message-lastname"></div>
-	<div id="message-email"></div>
+	<div id="message-response"></div>
 	<div id="message-city"></div>
 </body>
 </html>
