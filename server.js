@@ -2,6 +2,8 @@
 var express = require('express');
 // Include middle-ware body-parser to pull POST cotent from http request
 var bodyParser = require('body-parser');
+// Include mongoose so we can use MongoDB
+var mongoose = require('mongoose');
 
 // Define application using express
 var app = express();
@@ -9,14 +11,30 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Connect to online DB on mLab using connection string
+mongoose.connect('mongodb://admin:test123@ds042908.mlab.com:42908/comp2068');
+// Use User model
+var User = require('./models/user');
+
 // Load index.html with default route
 app.get('/', function(req, res){
 	res.sendfile("index.html");
 });
-
+// Take user input from form and store in database
 app.post('/', function(req, res){
-	var content = req.body.simpleinput;
-	console.log(content);
+	// create a new instance of User model
+	var user = new User();
+	user.name = req.body.simpleinput;
+	//make sure empty string is not passed
+	if (user.name.length){
+		// save the user object and check for errors
+	    user.save(function(err) {
+	        if (err)
+	            res.send(err);
+	        //res.json({ message: 'New User Created!' });
+	        console.log('New User Created! Name: ' + user.name);
+	    });
+	}
 });
 
 //Responde with text that is passed to
