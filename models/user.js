@@ -3,9 +3,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-    name: {type: String, required: true, trim: true}
+    username: {type: String, required: true, trim: true},
+    firstname: {type: String, required: true, trim: true},
+    lastname: {type: String, required: true, trim: true},
+    email: {type: String, required: true, trim: true},
+    city: {type: String, required: false, trim: true}
 },{
-	timestamps: true
+	timestamps: true	//time created and updated will be saved automatically by mongoose
 });
 
 module.exports = mongoose.model('User', UserSchema);
