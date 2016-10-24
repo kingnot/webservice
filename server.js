@@ -9,8 +9,18 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-//Responde with text that is passed to
+// Load index.html with default route
+app.get('/', function(req, res){
+	res.sendfile("index.html");
+});
+
 app.post('/', function(req, res){
+	var content = req.body.simpleinput;
+	console.log(content);
+});
+
+//Responde with text that is passed to
+app.post('/echo', function(req, res){
 	console.log(req.body);
 	res.send('ok');
 });
@@ -25,3 +35,5 @@ app.get('/hello', function(req, res){
 app.listen(3000, function(){
 	console.log('Server running at http://127.0.0.1:3000/');
 });
+
+module.exports = app;
