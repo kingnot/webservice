@@ -3,8 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>User Info</title>
-	<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js">
+	<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
 	</script>
+	<!--included google api for Geocoding to get Geo info of a city-->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-708OdoP-LFJ_wfMFnw-7R_NfPFNBoQw"></script>
     <script>
     	$(document).ready(function() {
 			$('#submitbutton').click(function(){
@@ -12,15 +14,45 @@
 				var nameString = $("input#firstname").val() + " " + $("input#lastname").val();
 				var emailString = $("input#email").val();
 				var cityString = $("input#city").val();
-				var inputString = usernameString + nameString + emailString + cityString;
+				var latitude = '';
+				var longitude = '';
+				var geoString = '';	//geographic info
+				var geocoder =  new google.maps.Geocoder();	//make a new google map geocoder
+
+				// Asynchronous function with Google Geocoding to get Latitude and Longitude of a given address
+				function getLatLng(address, fn){
+					geocoder.geocode({'address': address}, function(results, status){
+						if (status == google.maps.GeocoderStatus.OK) {
+							if (results[0]){
+								latitude = results[0].geometry.location.lat();							
+								longitude = results[0].geometry.location.lng();								
+								geoString = address + '  (Latitude: ' + latitude 
+											+ '  Longitude: ' + longitude + ")";
+							}
+							else {
+								geoString = 'Ops, this is an unknown city to us.'
+							}						
+						}
+						else {
+							geoString = 'Geocoder failed due to: ' + status;
+						}
+
+						fn(geoString);
+					});									
+				}				
+
+				var inputString = usernameString + nameString + emailString + geoString;
 				//AJAX call to display input sting below form
 				$.ajax({
 					type: "GET",
 					url: "/",
 					data: inputString,
 					success: function() {
-						$('#message-response').html("Thank you, " + nameString + ". Your account: " 
-							+ usernameString + " has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly.");
+						getLatLng(cityString, function(geo){
+							geoString = geo;
+							document.getElementById('message-response').innerHTML = "Thank you, " + nameString + ". Your account: " 
+							+ usernameString + " has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/>" + geoString;
+						});					
 					}
 				});
 			});
@@ -53,6 +85,5 @@
 		<input type="submit" id="submitbutton" value="Done">
 	</form>
 	<div id="message-response"></div>
-	<div id="message-city"></div>
 </body>
 </html>
