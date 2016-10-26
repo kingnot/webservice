@@ -5,8 +5,10 @@
 	<title>User Info</title>
 	<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
 	</script>
-	<!--included google api for Geocoding to get Geo info of a city-->
+	<!-- included google api for Geocoding to get Geo info of a city -->
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-708OdoP-LFJ_wfMFnw-7R_NfPFNBoQw"></script>
+	<!-- included simple weather api for getting the given city's temperature -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.simpleWeather/3.1.0/jquery.simpleWeather.min.js"></script>
     <script>
     	$(document).ready(function() {
 			$('#submitbutton').click(function(){
@@ -41,6 +43,20 @@
 					});									
 				}				
 
+				// use jQuery simple weather to get the current weather of a given city
+				$.simpleWeather({
+				    location: cityString,
+				    woeid: '',
+				    unit: 'c',
+				    success: function(weather) {
+				    	$("#message-weather").html('<p><i class="icon-'+ weather.code + '"></i> '
+				    		+ weather.temp+'&deg;'+weather.units.temp+'<p>');
+				    },
+				    error: function(error) {
+						$("#message-weather").html('<p>'+error+'</p>');
+					}
+				});
+
 				var inputString = usernameString + nameString + emailString + geoString;
 				//AJAX call to display input sting below form
 				$.ajax({
@@ -51,7 +67,7 @@
 						getLatLng(cityString, function(geo){
 							geoString = geo;
 							document.getElementById('message-response').innerHTML = "Thank you, " + nameString + ". Your account: " 
-							+ usernameString + " has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/>" + geoString;
+							+ usernameString + " has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/><br/>" + geoString;
 						});					
 					}
 				});
@@ -85,5 +101,6 @@
 		<input type="submit" id="submitbutton" value="Done">
 	</form>
 	<div id="message-response"></div>
+	<div id="message-weather"></div>
 </body>
 </html>
