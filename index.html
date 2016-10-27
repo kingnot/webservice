@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>User Info</title>
-	<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+	<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
 	</script>
 	<!-- included google api for Geocoding to get Geo info of a city -->
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-708OdoP-LFJ_wfMFnw-7R_NfPFNBoQw"></script>
@@ -49,11 +49,12 @@
 				    woeid: '',
 				    unit: 'c',
 				    success: function(weather) {
-				    	$("#message-weather").html('<p><i class="icon-'+ weather.code + '"></i> '
-				    		+ weather.temp+'&deg;'+weather.units.temp+'<p>');
+				    	$("#message-weather").html('<p><i class="icon-'+ weather.code + '"></i></p> '
+				    		+ '<p class="currently">' + weather.currently + '   ' + weather.temp 
+				    		+ '&deg;'+ weather.units.temp + '</p>');
 				    },
 				    error: function(error) {
-						$("#message-weather").html('<p>'+error+'</p>');
+						$("#message-weather").html('<p>' + error + '</p>');
 					}
 				});
 

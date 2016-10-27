@@ -5,8 +5,29 @@ var bodyParser = require('body-parser');
 // Include mongoose so we can use MongoDB
 var mongoose = require('mongoose');
 
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
+// options to set up for OpenSSL private key and certificate
+var options = {
+    key: fs.readFileSync('../ssl/webservice/server.key'),
+    cert: fs.readFileSync('../ssl/webservice/server.crt'),
+    requestCert: false,
+    rejectUnauthorized: false
+};
+
 // Define application using express
 var app = express();
+
+// IP defaults to 127.0.0.1
+// Created an http service on port 3000, an https service on port 8080
+var httpServer = http.createServer(app).listen(3000, function(){
+    console.log("Http server started at port 3000");
+});
+var httpsServer = https.createServer(options, app).listen(8080, function(){
+    console.log("Https server started at port 8080");
+});
+
 //configure app to use bodyParser(), this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -52,11 +73,6 @@ app.post('/echo', function(req, res){
 app.get('/hello', function(req, res){
 	res.type('text/plain');
 	res.send('Hello World');
-});
-
-// Listen on port 3000, IP defaults to 127.0.0.1
-app.listen(3000, function(){
-	console.log('Server running at http://127.0.0.1:3000/');
 });
 
 module.exports = app;
