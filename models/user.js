@@ -7,7 +7,7 @@ var UserSchema = new Schema({
     firstname: {type: String, required: true, trim: true},
     lastname: {type: String, required: true, trim: true},
     email: {type: String, required: true, trim: true},
-    city: {type: String, required: false, trim: true}
+    city: {type: String, required: true, trim: true}
 },{
 	timestamps: true	//time created and updated will be saved automatically by mongoose
 });

@@ -1,0 +1,16 @@
+/* Customized stylesheet goes here */
+
+body {
+	padding-top: 50px;
+	padding-left: 80px;
+	font: 13px 'Open Sans', "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.message {
+	font-weight: bold;
+	font-style: italic;
+}
+
+#message-weather {
+	text-transform: uppercase;
+}

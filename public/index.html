@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>User Info</title>
+	<!-- Bootstrap Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Bootstrap Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+	<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<!-- Bootstrap Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!-- included google api for Geocoding to get Geo info of a city -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-708OdoP-LFJ_wfMFnw-7R_NfPFNBoQw"></script>
+	<!-- included simple weather api for getting the given city's temperature -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.simpleWeather/3.1.0/jquery.simpleWeather.min.js"></script>
+	<!-- included customized javascript-->
+    <script src="javascripts/main.js"></script>	
+</head>
+<body>
+	<div class="row">
+		<div class="col-md-8">
+			<form action="/" method="post">
+				<div class="form-group">
+					<label for="username">Username:  </label>
+					<input type="text" id="username" name="username" required><br/>
+				</div>
+				<div class="form-group">
+					<label for="firstname">First Name:  </label>
+					<input type="text" id="firstname" name="firstname" required><br/>
+				</div>
+				<div class="form-group">
+					<label for="lastname">Last Name:  </label>
+					<input type="text" id="lastname" name="lastname" required><br/>
+				</div>
+				<div class="form-group">
+					<label for="email">Email:  </label>
+					<input type="email" id="email" name="email" required><br/>
+				</div>
+				<div class="form-group">
+					<label for="city">City:  </label>
+					<input type="text" id="city" name="city" required><br/>
+				</div>
+				<input type="submit" class="btn btn-default" id="submitbutton" value="Done">
+			</form>
+		</div>
+	</div>
+	<br/>
+	<div class="message" id="message-response"></div>
+	<div class="message" id="message-weather"></div>		
+</body>
+</html>

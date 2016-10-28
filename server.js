@@ -4,7 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 // Include mongoose so we can use MongoDB
 var mongoose = require('mongoose');
-
+var path = require('path');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
@@ -18,12 +18,13 @@ var options = {
 
 // Define application using express
 var app = express();
-
+app.use(express.static(__dirname + '/public'));	//to use stylesheets and javascript files in /public directory
 // IP defaults to 127.0.0.1
-// Created an http service on port 3000, an https service on port 8080
+// Created an http service on port 3000, 
 var httpServer = http.createServer(app).listen(3000, function(){
     console.log("Http server started at port 3000");
 });
+// Created an https service on port 8080
 var httpsServer = https.createServer(options, app).listen(8080, function(){
     console.log("Https server started at port 8080");
 });
@@ -39,7 +40,7 @@ var User = require('./models/user');
 
 // Load index.html with default route
 app.get('/', function(req, res){
-	res.sendfile("index.html");
+	res.sendFile(path.join(__dirname + "/public/index.html"));
 });
 // Take user input from form and store in database
 app.post('/', function(req, res){
@@ -52,12 +53,12 @@ app.post('/', function(req, res){
 	user.email = req.body.email;
 	user.city = req.body.city;
 	//make sure empty string is not passed
-	if (user.username.length && user.firstname.length && user.lastname.length && user.email.length){
+	if (user.username.length && user.firstname.length && user.lastname.length 
+		&& user.email.length && user.city.length){
 		// save the user object and check for errors
 	    user.save(function(err) {
 	        if (err)
 	            res.send(err);
-	        //res.json({ message: 'New User Created!' });
 	        console.log('New User Created! Name: ' + user.username);
 	    });
 	}
