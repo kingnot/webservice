@@ -10,8 +10,8 @@ var https = require('https');
 var fs = require('fs');
 // options to set up for OpenSSL private key and certificate
 var options = {
-    key: fs.readFileSync('../ssl/webservice/server.key'),
-    cert: fs.readFileSync('../ssl/webservice/server.crt'),
+    key: fs.readFileSync('./ssl/server.key'),
+    cert: fs.readFileSync('./ssl/server.crt'),
     requestCert: false,
     rejectUnauthorized: false
 };
