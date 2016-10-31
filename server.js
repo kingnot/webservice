@@ -4,6 +4,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 // Include mongoose so we can use MongoDB
 var mongoose = require('mongoose');
+// Include route functions for user
+var userRoute = require('./routes/user');
 var path = require('path');
 var http = require('http');
 var https = require('https');
@@ -32,6 +34,8 @@ var httpsServer = https.createServer(options, app).listen(8080, function(){
 //configure app to use bodyParser(), this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.text());                                    
+app.use(bodyParser.json({ type: 'application/json'}));
 
 // Connect to online DB on mLab using connection string
 mongoose.connect('mongodb://admin:test123@ds042908.mlab.com:42908/comp2068');
@@ -67,13 +71,21 @@ app.post('/', function(req, res){
 //Responde with text that is passed to
 app.post('/echo', function(req, res){
 	console.log(req.body);
-	res.send('ok');
+	res.json(req.body);
 });
 
 //Responde with Hello World to /hello route to all requests
 app.get('/hello', function(req, res){
-	res.type('text/plain');
-	res.send('Hello World');
+	res.json("Hello World");
 });
+
+/* The whole RESTful web services to be used in the future */
+app.route("/user")
+	.get(userRoute.getUsers)	//GET to read all the users
+	.post(userRoute.postUser);	//POST to create a new user
+app.route("/user/:id")
+	.get(userRoute.getUser)		//GET to read a user with id
+	.delete(userRoute.deleteUser)	//DELETE a user with id
+	.put(userRoute.updateUser);		//PUT to update a user with id
 
 module.exports = app;
