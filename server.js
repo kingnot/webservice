@@ -51,21 +51,21 @@ app.post('/', function(req, res){
 	// create a new instance of User model
 	var user = new User();
 	// get input from form and save to object
-	user.username = req.body.username;
 	user.firstname = req.body.firstname;
 	user.lastname = req.body.lastname;
 	user.email = req.body.email;
 	user.city = req.body.city;
-	//make sure empty string is not passed
-	if (user.username.length && user.firstname.length && user.lastname.length 
-		&& user.email.length && user.city.length){
-		// save the user object and check for errors
-	    user.save(function(err) {
-	        if (err)
-	            res.send(err);
-	        console.log('New User Created! Name: ' + user.username);
-	    });
-	}
+
+	// save the user object and check for errors
+    user.save(function(err, newUser) {
+        if (err) {
+        	res.send(err);	
+        }
+        else {
+        	console.log('New User Created! Email: ' + user.email);
+	        res.json({message: 'New User Created! Email: ' + user.email, newUser});	
+        }    
+    });
 });
 
 //Responde with text that is passed to

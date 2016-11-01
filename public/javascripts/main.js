@@ -1,7 +1,6 @@
 /* Customized Javascripts go here */
 $(document).ready(function() {
-	$('#submitbutton').click(function(){
-		var usernameString = $("input#username").val();
+	$('#submitbutton').click(function(event){
 		var fnameString = $("input#firstname").val();;
 		var lnameString = $("input#lastname").val();
 		var emailString = $("input#email").val();
@@ -31,7 +30,16 @@ $(document).ready(function() {
 
 				fn(geoString);
 			});									
-		}				
+		}
+
+		/* 
+		 * This function is used to test if a string is email format 
+		 * return boolean
+		 */
+		function isEmail(email) {
+		  var regex = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]/;
+		  return regex.test(email);
+		}
 
 		// use jQuery simple weather to get the current weather of a given city
 		if (cityString.length) {
@@ -50,22 +58,31 @@ $(document).ready(function() {
 			});
 		}
 
-		var inputString = usernameString + fnameString + lnameString + emailString + geoString;
+		// Take input data into a json form
+		var inputData = {
+			'firstname': fnameString,
+			'lastname': lnameString,
+			'email': emailString,
+			'city': cityString
+		};
 		//AJAX call to display input sting below form
 		$.ajax({
-			type: "GET",
+			type: "POST",
 			url: "/",
-			data: inputString,
+			data: inputData,
+			dataType: 'json',
 			success: function() {
 				getLatLng(cityString, function(geo){
 					geoString = geo;
-					// make sure required fields are not empty before giving response
-					if (usernameString.length && fnameString.length && lnameString.length 
-						&& emailString.length && cityString.length) {
-						document.getElementById('message-response').innerHTML = "Thank you, " + fnameString + " " + lnameString + ". Your account: " + usernameString + " has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/><br/>" + geoString;
+					// make sure required fields are not empty and email is in proper format before giving response
+					if (fnameString.length && lnameString.length 
+						&& emailString.length && cityString.length && isEmail(emailString)) {
+						document.getElementById('message-response').innerHTML = "Thank you, " + fnameString + " " + lnameString + ". Your account has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/><br/>" + geoString;
 					}
 				});					
 			}
 		});
+		// stop the form from submitting the normal way and refreshing the page
+        event.preventDefault();
 	});
 });
