@@ -17,30 +17,34 @@
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-708OdoP-LFJ_wfMFnw-7R_NfPFNBoQw"></script>
 	<!-- included simple weather api for getting the given city's temperature -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.simpleWeather/3.1.0/jquery.simpleWeather.min.js"></script>
+	<!-- included jQuery validation to validate form input -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.1/jquery.validate.min.js"></script>
 	<!-- included customized javascript-->
     <script src="javascripts/main.js"></script>	
 </head>
 <body>
-	<form action="/" method="post">
+	<div class="container">
+	<form action="/" method="post" name="userForm">
 		<div class="form-group">
 		<div class="form-group">
 			<label for="firstname">First Name:  </label>
-			<input type="text" id="firstname" name="firstname" required><br/>
+			<input type="text" id="firstname" name="firstname"><br/>
 		</div>
 		<div class="form-group">
 			<label for="lastname">Last Name:  </label>
-			<input type="text" id="lastname" name="lastname" required><br/>
+			<input type="text" id="lastname" name="lastname"><br/>
 		</div>
 		<div class="form-group">
 			<label for="email">Email:  </label>
-			<input type="email" id="email" name="email" required><br/>
+			<input type="email" id="email" name="email"><br/>
 		</div>
 		<div class="form-group">
 			<label for="city">City:  </label>
-			<input type="text" id="city" name="city" required><br/>
+			<input type="text" id="city" name="city"><br/>
 		</div>
 		<button type="submit" class="btn btn-default" id="submitbutton">Done</button>
 	</form>
+	</div>
 	<br/><br/>
 	<div class="message" id="message-response"></div>
 	<div class="message" id="message-weather"></div>		
