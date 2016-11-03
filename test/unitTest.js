@@ -1,3 +1,10 @@
+/*
+ * Author: Fei Wang
+ * Date: Oct 30, 2016
+ * Unit testing cases are defined here,
+ * using should() test style.
+ */
+
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 //include chai for assertion library
@@ -64,6 +71,44 @@ describe('/echo POST', function() {
  * Test the / route with POST
  */
 describe('/ POST', function(){
+  it('it should not POST a user without firstname', function(done) {
+  	var testUser = {
+  		"lastname": "Smith",
+  		"email": "js@test.com",
+  		"city": "Toronto"
+  	};
+  	chai.request(app)
+  		.post("/")
+  		.send(testUser)
+  		.end(function(err, res) {
+  			if (err) done(err);
+  			res.should.have.status(200);
+  			res.should.be.json;
+  			res.body.should.have.property('errors');
+            res.body.errors.should.have.property('firstname');
+            res.body.errors.firstname.should.have.property('kind').eql('required');
+            done();
+  		});
+  });
+  it('it should not POST a user without lastname', function(done) {
+  	var testUser = {
+  		"firstname": "John",
+  		"email": "js@test.com",
+  		"city": "Toronto"
+  	};
+  	chai.request(app)
+  		.post("/")
+  		.send(testUser)
+  		.end(function(err, res) {
+  			if (err) done(err);
+  			res.should.have.status(200);
+  			res.should.be.json;
+  			res.body.should.have.property('errors');
+            res.body.errors.should.have.property('lastname');
+            res.body.errors.lastname.should.have.property('kind').eql('required');
+            done();
+  		});
+  });
   it('it should not POST a user without email', function(done) {
   	var testUser = {
   		"firstname": "John",
@@ -80,6 +125,25 @@ describe('/ POST', function(){
   			res.body.should.have.property('errors');
             res.body.errors.should.have.property('email');
             res.body.errors.email.should.have.property('kind').eql('required');
+            done();
+  		});
+  });
+  it('it should not POST a user without city', function(done) {
+  	var testUser = {
+  		"firstname": "John",
+  		"lastname": "Smith",
+  		"email": "js@test.com"
+  	};
+  	chai.request(app)
+  		.post("/")
+  		.send(testUser)
+  		.end(function(err, res) {
+  			if (err) done(err);
+  			res.should.have.status(200);
+  			res.should.be.json;
+  			res.body.should.have.property('errors');
+            res.body.errors.should.have.property('city');
+            res.body.errors.city.should.have.property('kind').eql('required');
             done();
   		});
   });

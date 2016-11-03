@@ -1,4 +1,9 @@
-/* Customized Javascripts go here */
+/*
+ * Author: Fei Wang
+ * Date: Oct 27, 2016
+ * Customized Javascripts go here 
+ */
+
 $(document).ready(function() {
 	// stop the form from submitting the normal way and refreshing the page
 	event.preventDefault();
@@ -89,7 +94,7 @@ $(document).ready(function() {
 				'city': cityString
 			};
 
-			//AJAX call to display input sting below form
+			//AJAX call to display input sting below form with coresponding response
 			$.ajax({
 				type: "POST",
 				url: "/",
@@ -104,6 +109,9 @@ $(document).ready(function() {
 							document.getElementById('message-response').innerHTML = "Thank you, " + fnameString + " " + lnameString + ". Your account has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/><br/>" + geoString;
 						}
 					});					
+				},
+				error: function(error) {
+					document.getElementById('message-response').innerHTML = "<p>" + error + "</p>";
 				}
 			});
 		}

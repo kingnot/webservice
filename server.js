@@ -1,3 +1,10 @@
+/*
+ * Author: Fei Wang
+ * Date: Oct 22, 2016
+ * This is the starting point of node application, 
+ * where module dependency and routes are defined.
+ */
+
 // Include express module for easier REST routes
 var express = require('express');
 // Include middle-ware body-parser to pull POST cotent from http request

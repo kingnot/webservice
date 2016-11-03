@@ -1,4 +1,9 @@
-/* All the CRUD functions for user route are defined here */
+/*
+ * Author: Fei Wang
+ * Date: Oct 27, 2016
+ * All the CRUD functions for user route are defined here.
+ */
+
 var mongoose = require('mongoose');
 var User = require('../models/user');
 

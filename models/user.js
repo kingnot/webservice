@@ -1,4 +1,9 @@
-/* Define data model for User */
+/*
+ * Author: Fei Wang
+ * Date: Oct 27, 2016
+ * Define data model for User by using mongoose.
+ */
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
