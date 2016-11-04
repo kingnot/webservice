@@ -46,6 +46,9 @@ app.use(bodyParser.json({ type: 'application/json'}));
 
 // Connect to online DB on mLab using connection string
 mongoose.connect('mongodb://admin:test123@ds042908.mlab.com:42908/comp2068');
+// Connect to local DB in case online DB is not available
+//mongoose.connect('mongodb://localhost/user');
+
 // Use User model
 var User = require('./models/user');
 

@@ -170,4 +170,139 @@ describe('/ POST', function(){
   		});
   });
 });
+
+/*
+ * Test the /user route with RESTful verbs
+ */
+describe('Users', function() {
+    beforeEach(function(done) {
+    	// remove all the user documents for testing
+        User.remove({}, function(err) { 
+           done();         
+        });     
+    });
+ /*
+  * Test the /GET/user route
+  */
+  describe('/GET user', function() {
+      it('it should GET all the users', function(done) {
+            chai.request(app)
+            .get('/user')
+            .end(function(err, res) {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                res.body.length.should.be.eql(0);
+              done();
+            });
+      });
+  });
+ /*
+  * Test the /POST/user/ route
+  */
+  describe('/POST user', function() {
+      it('it should not POST a user without email field', function(done) {
+        var user = {
+            "firstname": "John",
+  			"lastname": "Smith",
+  			"city": "Toronto"
+        }
+            chai.request(app)
+            .post('/user')
+            .send(user)
+            .end(function(err, res) {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('errors');
+                res.body.errors.should.have.property('email');
+                res.body.errors.email.should.have.property('kind').eql('required');
+              done();
+            });
+      });
+      it('it should POST a user ', function(done) {
+        var user = {
+            "firstname": "John",
+  			"lastname": "Smith",
+  			"email": "js@test.com",
+  			"city": "Toronto"
+        }
+            chai.request(app)
+            .post('/user')
+            .send(user)
+            .end(function(err, res) {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eql('User successfully added!');
+                res.body.user.should.have.property('firstname');
+                res.body.user.should.have.property('lastname');
+                res.body.user.should.have.property('email');
+                res.body.user.should.have.property('city');
+              done();
+            });
+      });
+  });
+ /*
+  * Test the /GET/user/:id route
+  */
+  describe('/GET/:id user', function() {
+      it('it should GET a user by the given id', function(done) {
+        var user = new User({ firstname: "John", lastname: "Smith", email: "js@test.com", city: "Toronto" });
+        user.save(function(err, user) {
+            chai.request(app)
+            .get('/user/' + user.id)
+            .send(user)
+            .end(function(err, res) {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('firstname');
+                res.body.should.have.property('lastname');
+                res.body.should.have.property('email');
+                res.body.should.have.property('city');
+                res.body.should.have.property('_id').eql(user.id);
+              done();
+            });
+        });
+
+      });
+  });
+ /*
+  * Test the /PUT/user/:id route
+  */
+  describe('/PUT/:id user', function() {
+      it('it should UPDATE a user given the id', function(done) {
+        var user = new User({firstname: "Tony", lastname: "Stark", email: "ironman@avengers.com", city: "New York"})
+        user.save(function(err, user) {
+                chai.request(app)
+                .put('/user/' + user.id)
+                .send({firstname: "Tony", lastname: "Stark", email: "ironman@avengers.com", city: "New York"})
+                .end(function(err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('User updated!');
+                    res.body.user.should.have.property('city').eql("New York");
+                  done();
+                });
+          });
+      });
+  });
+ /*
+  * Test the /DELETE/user/:id route
+  */
+  describe('/DELETE/:id user', function() {
+      it('it should DELETE a user given the id', function(done) {
+        var user = new User({firstname: "Tony", lastname: "Stark", email: "ironman@avengers.com", city: "New York"})
+        user.save(function(err, user) {
+                chai.request(app)
+                .delete('/user/' + user.id)
+                .end(function(err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('User successfully deleted!');
+                    res.body.result.should.have.property('ok').eql(1);
+                    res.body.result.should.have.property('n').eql(1);
+                  done();
+                });
+          });
+      });
+  });
+});
  
