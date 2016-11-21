@@ -40,23 +40,33 @@ $(document).ready(function() {
 
 			// Asynchronous function with Google Geocoding to get Latitude and Longitude of a given address
 			function getLatLng(address, fn){
-				geocoder.geocode({'address': address}, function(results, status){
+				geocoder.geocode({'address': address, 'componentRestrictions': {country: 'Canada'}}, function(results, status){
+					var validCity = false;
 					if (status == google.maps.GeocoderStatus.OK) {	// if Geocoder runs successfully
 						if (results[0]){	//if there is a matching result from Google Geocoder
 							latitude = results[0].geometry.location.lat();							
-							longitude = results[0].geometry.location.lng();								
-							geoString = address + '  (Latitude: ' + latitude 
+							longitude = results[0].geometry.location.lng();
+							addressResult = results[0].formatted_address;								
+							formattedAddress = addressResult.split(",");	
+							if (formattedAddress[0].toUpperCase() != cityString.toUpperCase()) {								
+								geoString = "We've found the most likely place: " + addressResult;
+							}
+							else {
+								geoString = address + '  (Latitude: ' + latitude 
 										+ '  Longitude: ' + longitude + ")";
+								validCity = true;								
+							}
 						}
 						else {
 							geoString = 'Ops, this is an unknown city to us.'
+							$('#city').focus();
 						}						
 					}
 					else {
 						geoString = 'Geocoder failed due to: ' + status;
 					}
 
-					fn(geoString);
+					fn(geoString, validCity, addressResult);
 				});									
 			}
 
@@ -69,22 +79,25 @@ $(document).ready(function() {
 			  return regex.test(email);
 			}
 
-			// use jQuery simple weather to get the current weather of a given city
-			if (cityString.length) {
-				$.simpleWeather({
-				    location: cityString,
-				    woeid: '',
-				    unit: 'c',
-				    success: function(weather) {
-				    	$("#message-weather").html('<p><i class="icon-'+ weather.code + '"></i></p> '
-				    		+ '<p class="currently">' + weather.currently + '    ' + weather.temp 
-				    		+ '&deg;'+ weather.units.temp + '</p>');
-				    },
-				    error: function(error) {
-						$("#message-weather").html('<p>' + error + '</p>');
-					}
-				});
-			}
+			getLatLng(cityString, function(geo, valid_city, address_result){
+				addressResult = address_result;
+				// use jQuery simple weather to get the current weather of a given city
+				if (cityString.length) {
+					$.simpleWeather({
+					    location: address_result,
+					    woeid: '',
+					    unit: 'c',
+					    success: function(weather) {
+					    	$("#message-weather").html('<p><i class="icon-'+ weather.code + '"></i></p> '
+					    		+ '<p class="currently">' + weather.currently + '    ' + weather.temp 
+					    		+ '&deg;'+ weather.units.temp + '</p>');
+					    },
+					    error: function(error) {
+							$("#message-weather").html('<p>' + error + '</p>');
+						}
+					});
+				}
+			});
 
 			// Take input data into a json form
 			var inputData = {
@@ -94,26 +107,32 @@ $(document).ready(function() {
 				'city': cityString
 			};
 
-			//AJAX call to display input sting below form with coresponding response
-			$.ajax({
-				type: "POST",
-				url: "/",
-				data: inputData,
-				dataType: 'json',
-				success: function() {
-					getLatLng(cityString, function(geo){
-						geoString = geo;
-						// make sure required fields are not empty and email is in proper format before giving response
-						if (fnameString.length && lnameString.length 
-							&& emailString.length && cityString.length && isEmail(emailString)) {
-							document.getElementById('message-response').innerHTML = "Thank you, " + fnameString + " " + lnameString + ". Your account has been created." + "<br/>"+ "We will send a confirmation email to " + emailString + " shortly." + "<br/><br/>" + geoString;
+			getLatLng(cityString, function(geo, valid_city, address_result){
+				geoString = geo;
+				validCity = valid_city;
+				// make sure required fields are not empty, email is in proper format 
+				// and a valid city name before giving response
+				if (fnameString.length && lnameString.length 
+							&& emailString.length && cityString.length 
+							&& isEmail(emailString)) {
+					//AJAX call to display input sting below form with coresponding response
+					$.ajax({
+						type: "POST",
+						url: "/",
+						data: validCity ? inputData : null,
+						dataType: 'json',
+						success: function() {								
+							document.getElementById('message-response').innerHTML = "Thank you, " + fnameString + " " 
+								+ lnameString + ". Your account has been created." + "<br/>"+ "We will send a confirmation email to " 
+								+ emailString + " shortly." + "<br/><br/>" + geoString;					
+						},
+						error: function(error) {
+							document.getElementById('message-response').innerHTML = "<p>" + error + "</p>";
 						}
-					});					
-				},
-				error: function(error) {
-					document.getElementById('message-response').innerHTML = "<p>" + error + "</p>";
-				}
+					});
+				}			
 			});
+
 		}
 	});		
 
